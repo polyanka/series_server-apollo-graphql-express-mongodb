@@ -46,6 +46,7 @@ export const typeDefs = gql`
     series(id: ID!): Series!
     seriesList(
       genres: GenresType
+      name: String
       filter: SeriesListFilter!
       limit: Int!
       page: Int!

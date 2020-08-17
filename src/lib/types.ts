@@ -38,6 +38,7 @@ export interface SeriesListQuery {
 
 export interface SeriesListArgs {
   genres: GenresType | null;
+  name: string | null;
   filter: SeriesListFilter;
   limit: number;
   page: number;

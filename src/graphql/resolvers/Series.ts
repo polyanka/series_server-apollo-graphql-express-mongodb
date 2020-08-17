@@ -32,7 +32,7 @@ export const seriesResolvers: IResolvers = {
     },
     seriesList: async (
       _root: undefined,
-      { genres, filter, limit, page }: SeriesListArgs,
+      { genres, name, filter, limit, page }: SeriesListArgs,
       { db }: { db: Database }
     ): Promise<SeriesListData> => {
       try {
@@ -40,6 +40,10 @@ export const seriesResolvers: IResolvers = {
 
         if (genres) {
           query.genres = genres;
+        }
+
+        if (name) {
+          query.name = name;
         }
 
         const data: SeriesListData = {
