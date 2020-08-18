@@ -7,9 +7,14 @@ const clear = async () => {
     const db = await connectDatabase();
 
     const series = await db.series.find({}).toArray();
+    const episodes = await db.episodes.find({}).toArray();
 
     if (series.length > 0) {
       await db.series.drop();
+    }
+
+    if (episodes.length > 0) {
+      await db.episodes.drop();
     }
 
     console.log('[clear] : success');

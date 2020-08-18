@@ -26,7 +26,8 @@ export const typeDefs = gql`
     date: Int!
     status: StatusType!
     genres: [GenresType!]!
-    rating: Int!
+    rating: Float!
+    episodes(filter: EpisodesFilter!, limit: Int!, page: Int!): Episodes!
   }
 
   input CreateSeriesInput {
@@ -34,12 +35,31 @@ export const typeDefs = gql`
     date: Int!
     status: StatusType!
     genres: [GenresType!]!
-    rating: Int!
+    rating: Float!
   }
 
   type SeriesList {
     total: Int!
     result: [Series!]!
+  }
+
+  enum EpisodesFilter {
+    DATE_LOW_TO_HIGH
+    DATE_HIGH_TO_LOW
+  }
+
+  type Episode {
+    id: ID!
+    name: String!
+    date: String!
+    rating: Float!
+    episode: Int!
+    season: Int!
+  }
+
+  type Episodes {
+    total: Int!
+    result: [Episode!]!
   }
 
   type Query {

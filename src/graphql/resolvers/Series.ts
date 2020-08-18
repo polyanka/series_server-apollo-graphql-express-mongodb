@@ -1,3 +1,4 @@
+import { EpisodesFilter } from './../../lib/types';
 import { IResolvers } from 'apollo-server-express';
 import { ObjectId } from 'mongodb';
 import {
@@ -9,6 +10,8 @@ import {
   SeriesListData,
   SeriesListFilter,
   CreateSeriesArgs,
+  SeriesEpisodesArgs,
+  SeriesEpisodesData,
 } from '../../lib/types';
 
 // Provide resolver functions for your schema fields
@@ -82,6 +85,7 @@ export const seriesResolvers: IResolvers = {
         const id = new ObjectId();
         const insertRedult = await db.series.insertOne({
           _id: id,
+          episodes: [],
           ...input,
         });
         const insertedSeries = insertRedult.ops[0];
@@ -95,6 +99,36 @@ export const seriesResolvers: IResolvers = {
   Series: {
     id: (series: Series): string => {
       return series._id.toString();
+    },
+    episodes: async (
+      series: Series,
+      { filter, limit, page }: SeriesEpisodesArgs,
+      { db }: { db: Database }
+    ): Promise<SeriesEpisodesData | null> => {
+      try {
+        const data: SeriesEpisodesData = {
+          total: 0,
+          result: [],
+        };
+
+        let cursor = db.episodes.find({ _id: { $in: series.episodes } });
+
+        if (filter && filter == EpisodesFilter.DATE_HIGH_TO_LOW) {
+          cursor = cursor.sort({ date: 1 });
+        }
+
+        if (filter && filter == EpisodesFilter.DATE_LOW_TO_HIGH) {
+          cursor = cursor.sort({ date: -1 });
+        }
+
+        cursor = cursor.skip(page > 0 ? (page - 1) * limit : 0);
+        cursor = cursor.limit(limit);
+        data.total = await cursor.count();
+        data.result = await cursor.toArray();
+        return data;
+      } catch (error) {
+        throw new Error(`failed to query series episodes: ${error}`);
+      }
     },
   },
 };

@@ -25,6 +25,7 @@ export interface Series {
   status: StatusType;
   genres: GenresType[];
   rating: number;
+  episodes: ObjectId[];
 }
 
 export interface SeriesArgs {
@@ -34,6 +35,9 @@ export interface SeriesArgs {
 export interface SeriesListQuery {
   genres?: GenresType;
   name?: string;
+}
+export interface EpisodesQuery {
+  genres?: GenresType;
 }
 
 export interface SeriesListArgs {
@@ -62,6 +66,32 @@ export interface CreateSeriesArgs {
   input: CreateSeriesInput;
 }
 
+export enum EpisodesFilter {
+  DATE_LOW_TO_HIGH = 'DATE_LOW_TO_HIGH',
+  DATE_HIGH_TO_LOW = 'DATE_HIGH_TO_LOW',
+}
+
+export interface Episode {
+  _id: ObjectId;
+  episode: number;
+  season: number;
+  name: string;
+  date: string;
+  rating: number;
+}
+
+export interface SeriesEpisodesArgs {
+  filter: EpisodesFilter;
+  limit: number;
+  page: number;
+}
+
+export interface SeriesEpisodesData {
+  total: number;
+  result: Episode[];
+}
+
 export interface Database {
+  episodes: Collection<Episode>;
   series: Collection<Series>;
 }
