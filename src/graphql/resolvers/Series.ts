@@ -46,7 +46,8 @@ export const seriesResolvers: IResolvers = {
         }
 
         if (name) {
-          query.name = name;
+          const regex = new RegExp(name, 'i');
+          query.name = regex;
         }
 
         const data: SeriesListData = {
@@ -99,6 +100,9 @@ export const seriesResolvers: IResolvers = {
   Series: {
     id: (series: Series): string => {
       return series._id.toString();
+    },
+    name: (series: Series): string => {
+      return series.name.toLocaleUpperCase();
     },
     episodes: async (
       series: Series,

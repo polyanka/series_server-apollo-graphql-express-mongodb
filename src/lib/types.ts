@@ -34,8 +34,9 @@ export interface SeriesArgs {
 
 export interface SeriesListQuery {
   genres?: GenresType;
-  name?: string;
+  name?: RegExp;
 }
+
 export interface EpisodesQuery {
   genres?: GenresType;
 }
